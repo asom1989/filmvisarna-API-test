@@ -64,49 +64,7 @@ app.delete("/movies/:id", (req, res) => {
   });
 });
 
-// ---------------------------------
-// Genres
-// ---------------------------------
-app.get("/genres", (req, res) => {
-  db.query("SELECT * FROM genre", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
 
-app.post("/genres", (req, res) => {
-  const { genre_name } = req.body;
-  db.query(
-    "INSERT INTO genre (genre_name) VALUES (?)",
-    [genre_name],
-    (err, results) => {
-      if (err) return res.status(500).json(err);
-      res.status(201).json({ id: results.insertId });
-    }
-  );
-});
-
-// ---------------------------------
-// Auditors
-// ---------------------------------
-app.get("/auditoriums", (req, res) => {
-  db.query("SELECT * FROM auditorium", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-app.post("/auditoriums", (req, res) => {
-  const { auditorium_name } = req.body;
-  db.query(
-    "INSERT INTO auditorium (auditorium_name) VALUES (?)",
-    [auditorium_name],
-    (err, results) => {
-      if (err) return res.status(500).json(err);
-      res.status(201).json({ id: results.insertId });
-    }
-  );
-});
 
 // ---------------------------------
 // Tickets
