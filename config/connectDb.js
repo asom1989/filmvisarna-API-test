@@ -13,7 +13,7 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) throw err;
-  console.log("Connected to MySQL database!");
+  console.log(`Connected to MySQL ${process.env.DB_NAME} database!`);
 });
 
 export default db;
