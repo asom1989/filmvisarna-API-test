@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// استخدام middleware
+// middleware
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -63,8 +63,6 @@ app.delete("/movies/:id", (req, res) => {
     res.sendStatus(204);
   });
 });
-
-
 
 // ---------------------------------
 // Tickets
