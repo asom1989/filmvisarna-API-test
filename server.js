@@ -16,72 +16,95 @@ app.use(bodyParser.json());
 // ---------------------------------
 // Movies
 // ---------------------------------
-app.get("/movies", (req, res) => {
-  db.query("SELECT * FROM movie", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
+app.get("/movies", async (req, res) => {
+  try {
+    db.query("SELECT * FROM movie", (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 
-app.get("/movies/:id", (req, res) => {
+app.get("/movies/:id", async (req, res) => {
   const { id } = req.params;
-  db.query("SELECT * FROM movie WHERE id = ?", [id], (err, results) => {
-    if (err) return res.status(500).json(err);
+  try {
+    db.query("SELECT * FROM movie WHERE id = ?", [id], (err, results) => {
+      if (err) throw err;
 
-    if (results.length === 0) {
-      return res.status(404).json({ message: "Movie not found" });
-    }
-
-    res.json(results[0]);
-  });
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Movie not found" });
+      }
+      res.json(results[0]);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 
-app.post("/movies", (req, res) => {
+app.post("/movies", async (req, res) => {
   const { title, play_time, movie_info } = req.body;
-  db.query(
-    "INSERT INTO movie (title, play_time, movie_info) VALUES (?, ?, ?)",
-    [title, play_time, JSON.stringify(movie_info)],
-    (err, results) => {
-      if (err) return res.status(500).json(err);
-      res.status(201).json({ id: results.insertId });
-    }
-  );
+  try {
+    db.query(
+      "INSERT INTO movie (title, play_time, movie_info) VALUES (?, ?, ?)",
+      [title, play_time, JSON.stringify(movie_info)],
+      (err, results) => {
+        if (err) throw err;
+        res.status(201).json({ id: results.insertId });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 
-app.put("/movies/:id", (req, res) => {
+app.put("/movies/:id", async (req, res) => {
   const { id } = req.params;
   const { title, play_time, movie_info } = req.body;
-  db.query(
-    "UPDATE movie SET title = ?, play_time = ?, movie_info = ? WHERE id = ?",
-    [title, play_time, JSON.stringify(movie_info), id],
-    (err) => {
-      if (err) return res.status(500).json(err);
+  try {
+    db.query(
+      "UPDATE movie SET title = ?, play_time = ?, movie_info = ? WHERE id = ?",
+      [title, play_time, JSON.stringify(movie_info), id],
+      (err) => {
+        if (err) throw err;
+        res.sendStatus(204);
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+});
+
+app.delete("/movies/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    db.query("DELETE FROM movie WHERE id = ?", [id], (err) => {
+      if (err) throw err;
       res.sendStatus(204);
-    }
-  );
-});
-
-app.delete("/movies/:id", (req, res) => {
-  const { id } = req.params;
-  db.query("DELETE FROM movie WHERE id = ?", [id], (err) => {
-    if (err) return res.status(500).json(err);
-    res.sendStatus(204);
-  });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 
 // ---------------------------------
 // Tickets
 // ---------------------------------
-app.get("/tickets", (req, res) => {
-  db.query("SELECT * FROM ticket", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
+app.get("/tickets", async (req, res) => {
+  try {
+    db.query("SELECT * FROM ticket", (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 
 // ---------------------------------
 // Starting the server
 // ---------------------------------
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
